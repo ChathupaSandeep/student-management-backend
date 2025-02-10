@@ -2,12 +2,12 @@ package com.Academa.student_management.student;
 
 import com.Academa.student_management.course.Course;
 import com.Academa.student_management.course.CourseRepository;
+import com.Academa.student_management.guardian.Guardian;
+import com.Academa.student_management.guardian.GuardianRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.Month;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -16,10 +16,12 @@ import java.util.Optional;
 public class StudentService {
 
     private final StudentRepository studentRepository;
+    private final GuardianRepository guardianRepository;
 
     @Autowired
-    public StudentService(StudentRepository studentRepository) {
+    public StudentService(StudentRepository studentRepository, GuardianRepository guardianRepository) {
         this.studentRepository = studentRepository;
+        this.guardianRepository = guardianRepository;
     }
 
     @Autowired
@@ -69,6 +71,21 @@ public class StudentService {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new RuntimeException("Course not found"));
         student.setCourse(course);
+        studentRepository.save(student);
+    }
+
+    @Transactional
+    public void assignGuardianToStudent(Long studentId, Long guardianId) {
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new IllegalStateException("Student with id " + studentId + " not found"));
+        Guardian guardian = guardianRepository.findById(guardianId)
+                .orElseThrow(() -> new IllegalStateException("Student with id " + studentId + " not found"));
+
+        if (student.getGuardian() != null) {
+            throw new IllegalStateException("Student already has a guardian assigned");
+        }
+
+        student.setGuardian(guardian);
         studentRepository.save(student);
     }
 }

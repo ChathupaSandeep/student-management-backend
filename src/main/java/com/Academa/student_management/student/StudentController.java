@@ -44,4 +44,11 @@ public class StudentController {
         studentService.enrollStudent(courseId, studentId);
     }
 
+    @PostMapping("/assign-guardian/{studentId}/{guardianId}")
+    public void assignGuardian(
+            @PathVariable Long studentId,
+            @PathVariable Long guardianId) {
+        studentService.assignGuardianToStudent(studentId, guardianId);
+    }
+
 }
