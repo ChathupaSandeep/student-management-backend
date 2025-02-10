@@ -1,5 +1,7 @@
 package com.Academa.student_management.student;
 
+import com.Academa.student_management.course.Course;
+import com.Academa.student_management.course.CourseRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,9 @@ public class StudentService {
     public StudentService(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
     }
+
+    @Autowired
+    private CourseRepository courseRepository;
 
     public List<Student> getStudents() {
         return studentRepository.findAll();
@@ -56,5 +61,14 @@ public class StudentService {
             }
             student.setEmail(email);
         }
+    }
+
+    public void enrollStudent(Long courseId, Long studentId) {
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new IllegalStateException("Student with id " + studentId + " not found"));
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new RuntimeException("Course not found"));
+        student.setCourse(course);
+        studentRepository.save(student);
     }
 }

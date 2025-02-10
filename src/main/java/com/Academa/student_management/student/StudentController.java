@@ -39,4 +39,9 @@ public class StudentController {
         studentService.updateStudent(studentId, name, email);
     }
 
+    @PatchMapping("/enroll/{studentId}/{courseId}")
+    public void enrollStudent(@PathVariable Long studentId, @PathVariable Long courseId) {
+        studentService.enrollStudent(courseId, studentId);
+    }
+
 }
