@@ -1,6 +1,9 @@
 package com.Academa.student_management.course;
 
+import com.Academa.student_management.student.Student;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table
@@ -18,6 +21,9 @@ public class Course {
     private Long id;
     private String name;
     private int duration;
+
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Student> students;
 
     public Course() {
     }
@@ -49,6 +55,14 @@ public class Course {
 
     public void setDuration(int duration) {
         this.duration = duration;
+    }
+
+    public List<Student> getStudents() {
+        return students;
+    }
+
+    public void setStudents(List<Student> students) {
+        this.students = students;
     }
 
     @Override

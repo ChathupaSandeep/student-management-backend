@@ -1,5 +1,6 @@
 package com.Academa.student_management.student;
 
+import com.Academa.student_management.course.Course;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -25,6 +26,10 @@ public class Student {
 
     @Transient
     private Integer age;
+
+    @ManyToOne
+    @JoinColumn(name="course_id")
+    private Course course;
 
     public Student() {
     }
@@ -80,6 +85,14 @@ public class Student {
 
     public void setAge(Integer age) {
         this.age = age;
+    }
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
     }
 
     @Override
