@@ -1,6 +1,7 @@
 package com.Academa.student_management.student;
 
 import com.Academa.student_management.course.Course;
+import com.Academa.student_management.guardian.Guardian;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -31,4 +32,8 @@ public class Student {
     @ManyToOne
     @JoinColumn(name="course_id")
     private Course course;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "guardian_id", referencedColumnName = "id")
+    private Guardian guardian;
 }
