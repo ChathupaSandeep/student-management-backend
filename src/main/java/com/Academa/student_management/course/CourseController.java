@@ -23,4 +23,17 @@ public class CourseController {
     public void addNewCourse(@RequestBody Course course){
         courseService.addNewCourse(course);
     }
+
+    @DeleteMapping(path="{courseId}")
+    public void deleteCourse(@PathVariable("courseId") Long courseId){
+        courseService.deleteCourse(courseId);
+    }
+
+    @PutMapping(path = "{courseId}")
+    public void updateCourse(
+            @PathVariable("courseId") Long courseId,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) int duration) {
+        courseService.updateCourse(courseId, name, duration);
+    }
 }
