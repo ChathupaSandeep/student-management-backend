@@ -65,15 +65,6 @@ public class StudentService {
         }
     }
 
-    public void enrollStudent(Long courseId, Long studentId) {
-        Student student = studentRepository.findById(studentId)
-                .orElseThrow(() -> new IllegalStateException("Student with id " + studentId + " not found"));
-        Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new RuntimeException("Course not found"));
-        student.setCourse(course);
-        studentRepository.save(student);
-    }
-
     @Transactional
     public void assignGuardianToStudent(Long studentId, Long guardianId) {
         Student student = studentRepository.findById(studentId)
@@ -86,6 +77,17 @@ public class StudentService {
         }
 
         student.setGuardian(guardian);
+        studentRepository.save(student);
+    }
+
+    @Transactional
+    public void enrollStudent(List<Long> courseIds, Long studentId) {
+        List<Course> courses = courseRepository.findByIdIn(courseIds);
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new IllegalStateException(
+                        "Student with id " + studentId + " does not exist"
+                ));
+        student.setCourses(courses);
         studentRepository.save(student);
     }
 }

@@ -1,8 +1,5 @@
 package com.Academa.student_management.course;
-
-import com.Academa.student_management.student.Student;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -36,4 +33,5 @@ public class CourseController {
             @RequestParam(required = false) int duration) {
         courseService.updateCourse(courseId, name, duration);
     }
+
 }

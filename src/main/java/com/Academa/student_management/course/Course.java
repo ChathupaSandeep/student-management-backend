@@ -1,10 +1,8 @@
 package com.Academa.student_management.course;
 
-import com.Academa.student_management.student.Student;
+import com.Academa.student_management.lecturer.Lecturer;
 import jakarta.persistence.*;
 import lombok.Data;
-
-import java.util.List;
 
 @Entity
 @Table
@@ -24,7 +22,7 @@ public class Course {
     private String name;
     private int duration;
 
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Student> students;
-
+    @ManyToOne
+    @JoinColumn(name = "lecturer_id")
+    private Lecturer lecturer;
 }

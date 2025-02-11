@@ -1,7 +1,4 @@
 package com.Academa.student_management.guardian;
-
-import com.Academa.student_management.guardian.Guardian;
-import com.Academa.student_management.guardian.GuardianService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
