@@ -40,4 +40,8 @@ public class LecturerController {
         lecturerService.updateLecturer(lecturerId, name, email, gender);
     }
 
+    @PatchMapping("/enroll/{lecturerId}/{courseId}")
+    public void enrollLecturer(@PathVariable Long lecturerId, @PathVariable Long courseId) {
+        lecturerService.enrollLecturer(courseId, lecturerId);
+    }
 }

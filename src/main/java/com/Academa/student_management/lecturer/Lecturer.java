@@ -1,9 +1,12 @@
 package com.Academa.student_management.lecturer;
 
+import com.Academa.student_management.course.Course;
 import com.Academa.student_management.enums.Gender;
-import com.Academa.student_management.student.Student;
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table
@@ -23,7 +26,20 @@ public class Lecturer {
     private String name;
     private String email;
 
+    @OneToMany(mappedBy = "lecturer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Course> courses = new ArrayList<>();
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Gender gender;
+
+    public void addCourse(Course course) {
+        courses.add(course);
+        course.setLecturer(this);
+    }
+
+    public void removeCourse(Course course) {
+        courses.remove(course);
+        course.setLecturer(null);
+    }
 }

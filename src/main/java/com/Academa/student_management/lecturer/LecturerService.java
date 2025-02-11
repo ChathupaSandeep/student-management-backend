@@ -1,23 +1,24 @@
 package com.Academa.student_management.lecturer;
 
+import com.Academa.student_management.course.Course;
+import com.Academa.student_management.course.CourseRepository;
 import com.Academa.student_management.enums.Gender;
-import com.Academa.student_management.lecturer.Lecturer;
-import com.Academa.student_management.student.Student;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
 public class LecturerService {
     private final LecturerRepository lecturerRepository;
+    private final CourseRepository courseRepository;
 
     @Autowired
-    public LecturerService(LecturerRepository lecturerRepository) {
+    public LecturerService(LecturerRepository lecturerRepository, CourseRepository courseRepository) {
         this.lecturerRepository = lecturerRepository;
+        this.courseRepository = courseRepository;
     }
 
     public List<Lecturer> getLecturers() {return lecturerRepository.findAll();}
@@ -52,5 +53,14 @@ public class LecturerService {
         }
 
         lecturer.setGender(gender);
+    }
+
+    public void enrollLecturer(Long courseId, Long lecturerId) {
+        Lecturer lecturer = lecturerRepository.findById(lecturerId)
+                .orElseThrow(() -> new IllegalStateException("Lecturer with id " + lecturerId + " not found"));
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new RuntimeException("Course not found"));
+        lecturer.addCourse(course);
+        lecturerRepository.save(lecturer);
     }
 }

@@ -1,5 +1,6 @@
 package com.Academa.student_management.student;
 
+import com.Academa.student_management.course.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,10 +11,12 @@ import java.util.List;
 public class StudentController {
 
     private final StudentService studentService;
+    private final CourseService courseService;
 
     @Autowired
-    public StudentController(StudentService studentService) {
+    public StudentController(StudentService studentService, CourseService courseService) {
         this.studentService = studentService;
+        this.courseService = courseService;
     }
 
     @GetMapping
@@ -39,16 +42,18 @@ public class StudentController {
         studentService.updateStudent(studentId, name, email);
     }
 
-    @PatchMapping("/enroll/{studentId}/{courseId}")
-    public void enrollStudent(@PathVariable Long studentId, @PathVariable Long courseId) {
-        studentService.enrollStudent(courseId, studentId);
-    }
-
     @PostMapping("/assign-guardian/{studentId}/{guardianId}")
     public void assignGuardian(
             @PathVariable Long studentId,
             @PathVariable Long guardianId) {
         studentService.assignGuardianToStudent(studentId, guardianId);
+    }
+
+    @PostMapping("/{studentId}/courses")
+    public void enrollStudent(
+            @PathVariable Long studentId,
+            @RequestParam List<Long> courseIds) {
+        studentService.enrollStudent(courseIds, studentId);
     }
 
 }

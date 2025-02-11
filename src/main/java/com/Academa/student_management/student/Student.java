@@ -3,13 +3,17 @@ package com.Academa.student_management.student;
 import com.Academa.student_management.course.Course;
 import com.Academa.student_management.guardian.Guardian;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table
-@Data
+@Getter
+@Setter
 public class Student {
     @Id
     @SequenceGenerator(
@@ -29,11 +33,10 @@ public class Student {
     @Transient
     private Integer age;
 
-    @ManyToOne
-    @JoinColumn(name="course_id")
-    private Course course;
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "guardian_id", referencedColumnName = "id")
     private Guardian guardian;
+
+    @OneToMany
+    private List<Course> courses = new ArrayList<>();
 }

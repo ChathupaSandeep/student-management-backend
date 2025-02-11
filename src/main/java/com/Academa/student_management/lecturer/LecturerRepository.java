@@ -1,7 +1,4 @@
 package com.Academa.student_management.lecturer;
-
-import com.Academa.student_management.guardian.Guardian;
-import com.Academa.student_management.student.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
