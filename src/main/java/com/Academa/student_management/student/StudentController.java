@@ -1,9 +1,14 @@
 package com.Academa.student_management.student;
 
 import com.Academa.student_management.course.CourseService;
+import com.Academa.student_management.student.StudentUpdateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+
+
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -35,26 +40,32 @@ public class StudentController {
         studentService.deleteStudent(studentId);
     }
 
-    @PutMapping(path = "{studentId}")
+    @PatchMapping(path = "{studentId}")
     public void updateStudent(
             @PathVariable("studentId") Long studentId,
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String email) {
-        studentService.updateStudent(studentId, name, email);
+            @RequestBody StudentUpdateRequest request) {
+        studentService.updateStudent(studentId, request.getName(), request.getEmail(), request.getDob());
     }
 
-    @PostMapping("/assign-guardian/{studentId}/{guardianId}")
+    @PatchMapping("/assign-guardian/{studentId}/{guardianId}")
     public void assignGuardian(
             @PathVariable Long studentId,
             @PathVariable Long guardianId) {
         studentService.assignGuardianToStudent(studentId, guardianId);
     }
 
-    @PostMapping("/{studentId}/courses")
+    @PostMapping("/{studentId}/courses/{courseId}")
     public void enrollStudent(
             @PathVariable Long studentId,
-            @RequestParam List<Long> courseIds) {
-        studentService.enrollStudent(courseIds, studentId);
+            @PathVariable Long courseId ){
+        studentService.enrollStudent(courseId, studentId);
+    }
+
+    @DeleteMapping("/{studentId}/courses/{courseId}")
+    public void unenrollStudent(
+            @PathVariable Long studentId,
+            @PathVariable Long courseId ){
+        studentService.unenrollStudent(courseId, studentId);
     }
 
 }

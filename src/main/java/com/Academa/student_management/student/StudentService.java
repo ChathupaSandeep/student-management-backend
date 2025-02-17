@@ -8,9 +8,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.time.Period;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -20,15 +19,14 @@ public class StudentService {
 
     private final StudentRepository studentRepository;
     private final GuardianRepository guardianRepository;
+    private final CourseRepository courseRepository;
 
     @Autowired
-    public StudentService(StudentRepository studentRepository, GuardianRepository guardianRepository) {
+    public StudentService(StudentRepository studentRepository, GuardianRepository guardianRepository, CourseRepository courseRepository) {
         this.studentRepository = studentRepository;
         this.guardianRepository = guardianRepository;
+        this.courseRepository = courseRepository;
     }
-
-    @Autowired
-    private CourseRepository courseRepository;
 
     public List<Student> getStudents() {
         return studentRepository.findAll();
@@ -51,7 +49,7 @@ public class StudentService {
     }
 
     @Transactional
-    public void updateStudent(Long studentId, String name, String email) {
+    public void updateStudent(Long studentId, String name, String email, LocalDate dob) {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new IllegalStateException("Student with id " + studentId + " not found"));
 
@@ -61,12 +59,17 @@ public class StudentService {
 
         if (email != null && !email.isEmpty() && !Objects.equals(student.getEmail(), email)) {
             Optional<Student> studentOptional = studentRepository.findStudentByEmail(email);
-            if (studentOptional.isPresent()) {
+            if (studentOptional.isPresent() && !studentOptional.get().getId().equals(studentId)) {
                 throw new IllegalStateException("Email is already taken");
             }
             student.setEmail(email);
         }
+
+        if (dob != null) {
+            student.setDob(dob);
+        }
     }
+
 
     @Transactional
     public void assignGuardianToStudent(Long studentId, Long guardianId) {
@@ -75,22 +78,38 @@ public class StudentService {
         Guardian guardian = guardianRepository.findById(guardianId)
                 .orElseThrow(() -> new IllegalStateException("Student with id " + studentId + " not found"));
 
-        if (student.getGuardian() != null) {
-            throw new IllegalStateException("Student already has a guardian assigned");
-        }
-
         student.setGuardian(guardian);
         studentRepository.save(student);
     }
 
     @Transactional
-    public void enrollStudent(List<Long> courseIds, Long studentId) {
-        List<Course> courses = courseRepository.findByIdIn(courseIds);
+    public void enrollStudent(Long courseId, Long studentId) {
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new IllegalStateException(
+                        "Course with id " + courseId + " does not exist"
+                ));
+
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new IllegalStateException(
                         "Student with id " + studentId + " does not exist"
                 ));
-        student.setCourses(courses);
+        student.getCourses().add(course);
         studentRepository.save(student);
     }
+
+    @Transactional
+    public void unenrollStudent(Long courseId, Long studentId) {
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new IllegalStateException(
+                        "Course with id " + courseId + " does not exist"
+                ));
+
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new IllegalStateException(
+                        "Student with id " + studentId + " does not exist"
+                ));
+        student.getCourses().remove(course);
+        studentRepository.save(student);
+    }
+
 }
