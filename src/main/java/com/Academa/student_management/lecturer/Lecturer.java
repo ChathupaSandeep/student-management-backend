@@ -2,6 +2,7 @@ package com.Academa.student_management.lecturer;
 
 import com.Academa.student_management.course.Course;
 import com.Academa.student_management.enums.Gender;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -26,6 +27,7 @@ public class Lecturer {
     private String name;
     private String email;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "lecturer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Course> courses = new ArrayList<>();
 

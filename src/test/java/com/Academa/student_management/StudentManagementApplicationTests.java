@@ -1,13 +1,19 @@
 package com.Academa.student_management;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.testcontainers.containers.PostgreSQLContainer;
 
-@SpringBootTest
 class StudentManagementApplicationTests {
+	static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:latest")
+			.withDatabaseName("student")
+			.withUsername("postgres")
+			.withPassword("abc123");
 
-	@Test
-	void contextLoads() {
+	static {
+		postgreSQLContainer.start();
+	}
+
+	public static PostgreSQLContainer<?> getInstance() {
+		return postgreSQLContainer;
 	}
 
 }

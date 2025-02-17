@@ -3,6 +3,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping(path = "api/v1/course")
 public class CourseController {
     private final CourseService courseService;

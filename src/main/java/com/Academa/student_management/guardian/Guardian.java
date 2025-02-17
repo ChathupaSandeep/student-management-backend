@@ -21,7 +21,4 @@ public class Guardian {
     private Long id;
     private String name;
     private String contactNo;
-
-    @OneToOne(mappedBy = "guardian")
-    private Student student;
 }
